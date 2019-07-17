@@ -1,18 +1,24 @@
 import random
 import tkinter as tk
-from PIL import Image,ImageTk
-
-
+from tkinter import *
 
 window=tk.Tk()
-window.geometry("300x500")
+window.geometry("500x500")
 window.title("Scissor Paper Rock @Diwas ")
 
-image=Image.open('aa.jpg')
-image.thumbnail((300,300),Image.ANTIALIAS)
-photo=ImageTk.PhotoImage(image)
-label_image=tk.Label(image=photo)
-label_image.grid(column=15,row=0)
+
+imageList = []
+
+scissorImg = PhotoImage( file = 'scissors.gif' )
+imageList.append( scissorImg.subsample( 3, 3) )
+
+paperImg = PhotoImage( file = 'paper.gif' )
+imageList.append( paperImg.subsample( 3, 3) )
+
+stoneImg = PhotoImage( file = 'stone.gif' )
+imageList.append( stoneImg.subsample( 3, 3) )
+
+
 
 #global variables
 USER_SCORE=0
@@ -26,12 +32,17 @@ def choice_to_number(choice):
     rps={'scissor':0,'paper':1,'rock':2}
     return rps[choice]
 
-def number_to_choice(number):
-        rps={0:'scissor',1:'paper',2:'rock'}
-        return rps[number]
+# def number_to_choice(number):
+#         rps={0:'scissor',1:'paper',2:'rock'}
+#         return rps[number]
     
 def random_computer_choice():
-    return random.choice(['scissor','paper','rock'])
+    items = ['scissor', 'paper', 'rock']
+    choice = random.choice(items)
+
+    Label( window, image = imageList[ items.index( choice ) ] ).grid( column = 25, row = 2 )
+
+    return  choice
 
 def result(human_choice,comp_choice):
     global USER_SCORE
@@ -42,23 +53,28 @@ def result(human_choice,comp_choice):
 
     if(user==comp):
         print("Tie")
-    elif((user-comp)%3==1):
+
+    elif( ( user-comp ) % 3 == 1 ):
+
          print("Sorry !! Com win")
-         USER_SCORE+=1
+         COMP_SCORE += 1
     else:
         print("Congarts !! You win")
-        COMP_SCORE+=1
+
+        USER_SCORE += 1
        
 
     #Text
-    text_area=tk.Text(master=window,height=12,width=30)
-    text_area.grid(column=15,row=4)
-    answer="Your Choice: {uc} \nComputer's Choice : {cc} \n Your Score : {u} \n Computer Score : {c}  \n\n made by diwas pandey ".format(uc=USER_CHOICE,cc=COMP_CHOICE,u=USER_SCORE,c=COMP_SCORE, font=('arial',24,'bold'))
+    text_area=tk.Text( master = window, height = 12, width = 30)
+    text_area.grid( column = 20, row = 5 )
+
+    answer="Your Choice: {uc} \nComputer's Choice : {cc} \nYour Score : {u} \nComputer Score : {c}  \n\n made by sowmy wayne ".format(uc=USER_CHOICE,cc=COMP_CHOICE,u=USER_SCORE,c=COMP_SCORE, font=('arial',24,'bold'))
     text_area.insert(tk.END,answer)
 
 
 #Event Handling
 def rock():
+
     global USER_CHOICE
     global COMP_CHOICE
     
@@ -67,6 +83,7 @@ def rock():
     result(USER_CHOICE,COMP_CHOICE)
 
 def paper():
+
     global USER_CHOICE
     global COMP_CHOICE
     
@@ -75,6 +92,7 @@ def paper():
     result(USER_CHOICE,COMP_CHOICE)
 
 def scissor():
+
     global USER_CHOICE
     global COMP_CHOICE
     
@@ -82,14 +100,20 @@ def scissor():
     COMP_CHOICE=random_computer_choice()
     result(USER_CHOICE,COMP_CHOICE)
     
+
+
 #buttons
-button1=tk.Button(text="       Scissor         ",bg="red",command=scissor, height=1,width=8,font=('arial',15,'bold'))
-button1.grid(column=15,row=1)
-button2=tk.Button(text="        Paper          ",bg="pink",command=paper, height=1,width=8,font=('arial',15,'bold'))
-button2.grid(column=15,row=2)
-button3=tk.Button(text="         Rock          ",bg="yellow",command=rock, height=1,width=8,font=('arial',15,'bold'))
-button3.grid(column=15,row=3)  
+button1 = tk.Button( image = imageList[0] ,command = scissor  )
+button1.grid( column = 15, row = 2 )
 
+button2=tk.Button(image = imageList[ 2 ], command=rock )
+button2.grid( column = 15, row = 4)
 
+button3=tk.Button(image = imageList[ 1 ], command=paper )
+button3.grid(column = 15, row = 3)
+
+#Label
+Label( window, text = 'User' ).grid( column = 15, row = 1 )
+Label( window, text = 'Computer' ).grid( column = 25, row = 1 )
 
 window.mainloop()
